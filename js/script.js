@@ -460,34 +460,6 @@ class DadosExtrator {
             'meio ambiente': 'meio ambiente',
         };
     }
-            
-            // Comum "e" → "ê"
-            'endereço': 'endereço',
-            'endereco': 'endereço',
-            'enderecos': 'endereços',
-            'acesso': 'acesso',
-            
-            // Comum "u" → "ú"
-            'modulo': 'módulo',
-            'residuo': 'resíduo',
-            
-            // Cidadão/Cidadã
-            'cidadao': 'cidadão',
-            'cidadaos': 'cidadãos',
-            'cidada': 'cidadã',
-            'cidadas': 'cidadãs',
-            
-            // Outras
-            'ninguem': 'ninguém',
-            'tambem': 'também',
-            'alem': 'além',
-            'amanha': 'amanhã',
-            'responsavel': 'responsável',
-            'humanitario': 'humanitário',
-            'importante': 'importante',
-            'funcionamento': 'funcionamento',
-        };
-    }
 
     // Corrige acentuação SEM alterar palavras
     corrigirAcentuacaoLocal(texto) {

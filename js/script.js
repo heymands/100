@@ -95,16 +95,36 @@ class DadosExtrator {
         // Remove "tel" ou "telefone" se existir
         texto = texto.replace(/\b(tel|telefone|phone)\s*[\:\-]?\s*/gi, '');
         
+        // Remove +55 se existir no início
+        texto = texto.replace(/\+55\s*/, '');
+        
+        // Limpa caracteres especiais que não sejam dígitos, parênteses e hífens
+        // Mantém apenas: digits, ( ) e -
+        // Remove: # * / @ $ & etc
+        let result = texto;
+        
         // Padrão: (XX) 9XXXX-XXXX ou (XX) XXXXX-XXXX
         // Extrai DDD + 8 ou 9 dígitos
-        return texto.replace(/\(?(\d{2})\)?[\s\-]?9?(\d{4})[\s\-]?(\d{4})/g, (match, ddd, parte1, parte2) => {
-            return `(${ddd}) 9${parte1}-${parte2}`;
+        result = result.replace(/\(?(\d{2})\)?[\s\.\-]*9?(\d{4})[\s\.\-]?(\d{4})/g, (match, ddd, parte1, parte2) => {
+            // Valida se tem 8 ou 9 dígitos no total
+            if ((parte1 + parte2).length === 8 || (parte1 + parte2).length === 9) {
+                return `(${ddd}) ${parte1}-${parte2}`;
+            }
+            return match;
         });
+        
+        return result;
     }
 
-    // Formata CEP: XXXXX-XXX
+    // Formata CEP: XXXXX-XXX (apenas se tiver 8 dígitos)
     formatarCEP(texto) {
-        return texto.replace(/(\d{5})(\d{3})/g, '$1-$2');
+        // Tira espaços e hífens do CEP antes de formatar
+        let result = texto;
+        
+        // Procura por números e formata se tiver exatamente 8 dígitos
+        result = result.replace(/(\d{5})[-\s]?(\d{3})/g, '$1-$2');
+        
+        return result;
     }
 
     // Padroniza horários
@@ -117,6 +137,13 @@ class DadosExtrator {
             [/\bsex\b/gi, 'Sexta'],
             [/\bsab\b/gi, 'Sábado'],
             [/\bdom\b/gi, 'Domingo'],
+            [/\blunes\b/gi, 'Segunda'],
+            [/\bmartes\b/gi, 'Terça'],
+            [/\bmiercoles\b/gi, 'Quarta'],
+            [/\bjueves\b/gi, 'Quinta'],
+            [/\bviernes\b/gi, 'Sexta'],
+            [/\bsabado\b/gi, 'Sábado'],
+            [/\bdomingo\b/gi, 'Domingo'],
         ];
         
         let resultado = texto;
@@ -127,6 +154,7 @@ class DadosExtrator {
         // Padroniza: "Segunda à Sexta de 8h às 17h"
         resultado = resultado.replace(/\b(\d{1,2})\s*(?:a|as|às)\s*(\d{1,2})\b/gi, '$1h às $2h');
         resultado = resultado.replace(/\bde\s+(\d{1,2}h)/gi, 'de $1');
+        resultado = resultado.replace(/\b(\d{1,2})h?\s*(?:\-|a|as)\s*(\d{1,2})h?\b/gi, '$1h às $2h');
         
         return resultado;
     }
@@ -263,11 +291,31 @@ class DadosExtrator {
             'cuiaba': 'Cuiabá',
             'palmas': 'Palmas',
             'campo grande': 'Campo Grande',
-            'joao pessoa': 'João Pessoa',
             'maceio': 'Maceió',
             'niteroi': 'Niterói',
             'sao jose dos campos': 'São José dos Campos',
             'taboao da serra': 'Taboão da Serra',
+            // NOVAS CIDADES COMPOSTAS
+            'santa barbara': 'Santa Bárbara',
+            'sete lagoas': 'Sete Lagoas',
+            'divinopolis': 'Divinópolis',
+            'igarassu': 'Igarassu',
+            'ilheus': 'Ilhéus',
+            'ilhabela': 'Ilhabela',
+            'boa vista': 'Boa Vista',
+            'rio branco': 'Rio Branco',
+            'florianopolis': 'Florianópolis',
+            'sao caetano do sul': 'São Caetano do Sul',
+            'diadema': 'Diadema',
+            'maua': 'Mauá',
+            'rio grande': 'Rio Grande',
+            'passo fundo': 'Passo Fundo',
+            'caxias do sul': 'Caxias do Sul',
+            'novo hamburgo': 'Novo Hamburgo',
+            'santarem': 'Santarém',
+            'macapa': 'Macapá',
+            'santo antonio': 'Santo Antônio',
+            'sao miguel dos campos': 'São Miguel dos Campos',
         };
     }
 
@@ -335,6 +383,83 @@ class DadosExtrator {
             'percepcao': 'percepção',
             'protecao': 'proteção',
             'direcao': 'direção',
+            'seguranca': 'segurança',
+            'saude': 'saúde',
+            'publico': 'público',
+            'publica': 'pública',
+            'orgao': 'órgão',
+            'cidadao': 'cidadão',
+            'cidadaos': 'cidadãos',
+            'endereco': 'endereço',
+            'enderecos': 'endereços',
+            'atendimento': 'atendimento',
+            'agencia': 'agência',
+            'agencias': 'agências',
+            'necessario': 'necessário',
+            'necessaria': 'necessária',
+            'servico': 'serviço',
+            'servicos': 'serviços',
+            'acesso': 'acesso',
+            'acessos': 'acessos',
+            'pessoa': 'pessoa',
+            'departamento': 'departamento',
+            'ministerio': 'ministério',
+            'ministrios': 'ministérios',
+            'responsavel': 'responsável',
+            'responsaveis': 'responsáveis',
+            'assistencia': 'assistência',
+            'assistencias': 'assistências',
+            'municipio': 'município',
+            'municipios': 'municípios',
+            'presidencia': 'presidência',
+            'superintendencia': 'superintendência',
+            'diretoria': 'diretoria',
+            'superintendente': 'superintendente',
+            'delegacia': 'delegacia',
+            'delegacias': 'delegacias',
+            'policia': 'polícia',
+            'militares': 'militares',
+            'seguranca': 'segurança',
+            'segurancas': 'segurançass',
+            'defesa': 'defesa',
+            'defensor': 'defensor',
+            'agropecuaria': 'agropecuária',
+            'agricultura': 'agricultura',
+            'tecnica': 'técnica',
+            'tecnicas': 'técnicas',
+            'educacao': 'educação',
+            'saude': 'saúde',
+            'previdencia': 'previdência',
+            'habitacao': 'habitação',
+            'construcao': 'construção',
+            'comercio': 'comércio',
+            'industria': 'indústria',
+            'universidade': 'universidade',
+            'faculdade': 'faculdade',
+            'historia': 'história',
+            'historico': 'histórico',
+            'patrimonio': 'patrimônio',
+            'artistico': 'artístico',
+            'preservacao': 'preservação',
+            'crianca': 'criança',
+            'criancas': 'crianças',
+            'adolescente': 'adolescente',
+            'idoso': 'idoso',
+            'idosos': 'idosos',
+            'mulher': 'mulher',
+            'turista': 'turista',
+            'cibernetica': 'cibernética',
+            'sistema': 'sistema',
+            'sistemas': 'sistemas',
+            'tecnologia': 'tecnologia',
+            'inovacao': 'inovação',
+            'pesquisa': 'pesquisa',
+            'desenvolvimento': 'desenvolvimento',
+            'metrologia': 'metrologia',
+            'qualidade': 'qualidade',
+            'meio ambiente': 'meio ambiente',
+        };
+    }
             
             // Comum "e" → "ê"
             'endereço': 'endereço',

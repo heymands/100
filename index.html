@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disque 100 - Extrator de Dados</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💬 Disque 100</h1>
+            <p>Extrator de Dados para Denúncias - Ministério dos Direitos Humanos</p>
+        </div>
+
+        <div class="content">
+            <div class="alert alert-error" id="alertError"></div>
+            <div class="alert alert-success" id="alertSuccess"></div>
+
+            <form id="formDados">
+                <div class="form-group">
+                    <label for="textoCola">Dados para Processamento</label>
+                    <textarea id="textoCola" placeholder="Cole aqui o texto com as 9 respostas das perguntas do formulário..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn-processar" id="btnProcessar">⚡ Processar</button>
+                    <button type="button" class="btn-limpar" id="btnLimpar">🗑️ Limpar</button>
+                    <button type="button" class="btn-copiar" id="btnCopiar">📋 Copiar</button>
+                </div>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                Processando e corrigindo...
+            </div>
+
+            <div class="resultado-box" id="resultBox">
+                <h2>✓ Respostas Processadas</h2>
+                <div class="resultado-texto" id="resultContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

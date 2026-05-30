@@ -1,0 +1,15 @@
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Node modules (se usar no futuro)
+node_modules/
+package-lock.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# Arquivos temporários
+*.tmp
+.env

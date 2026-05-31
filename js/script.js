@@ -664,17 +664,17 @@ class DadosExtrator {
             secoes.push(`Jurisdição/Atribuição: ${jurisdicao}`);
         }
         
-        // Seção 2: Responsável pela comunicação com o disque 100 (Q7)
+        // Seção 2: Responsável Pela Comunicação Com O Disque 100 (Q7)
         if (respostas[6]) {
-            secoes.push(`Responsável pela comunicação com o Disque 100: ${respostas[6]}`);
+            secoes.push(`Responsável Pela Comunicação Com O Disque 100: ${respostas[6]}`);
         }
         
-        // Seção 3: Informações adicionais (Q3)
+        // Seção 3: Informações Adicionais (Q3)
         if (respostas[2]) {
             secoes.push(`Informações Adicionais: ${respostas[2]}`);
         }
         
-        // Seção 4: Telefones disponíveis (Q4 e Q5)
+        // Seção 4: Telefones Disponíveis (Q4 e Q5)
         const telefones = [respostas[3], respostas[4]].filter(r => r).join(', ');
         if (telefones) {
             secoes.push(`Telefones Disponíveis: ${telefones}`);

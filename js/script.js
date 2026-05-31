@@ -90,6 +90,12 @@ class DadosExtrator {
         return texto.replace(/\s+/g, ' ').trim();
     }
 
+    // Remove letras duplicadas consecutivas (como "paaulo" → "paulo", "saaúde" → "saúde")
+    removerDuplicatasLetras(texto) {
+        // Remove repetições de letras consecutivas (mais de 2 da mesma letra)
+        return texto.replace(/([a-záéíóúãõâêô])\1{2,}/gi, '$1');
+    }
+
     // Expande abreviações de órgãos públicos
     expandirAbreviacoes(texto) {
         const abreviacoes = {
@@ -569,8 +575,11 @@ class DadosExtrator {
     processarResposta(numero, resposta) {
         // 1. Normaliza espaços
         resposta = this.normalizar(resposta);
-        
-        // 2. Corrige cidades brasileiras PRIMEIRO
+         
+        // 2. Remove letras duplicadas (paaulo → paulo)
+        resposta = this.removerDuplicatasLetras(resposta);
+         
+        // 3. Corrige cidades brasileiras PRIMEIRO
         resposta = this.corrigirCidades(resposta);
         
         // 3. Corrige acentuação local (SEM API)

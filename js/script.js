@@ -526,7 +526,7 @@ class DadosExtrator {
                 return;
             }
 
-            // Processa respostas
+            // Processa respostas individuais
             const respostas = [];
             for (let num = 1; num <= 9; num++) {
                 if (dados[num]) {
@@ -537,8 +537,9 @@ class DadosExtrator {
                 }
             }
 
-            // Exibe resultado
-            const resultado = respostas.join('. ');
+            // NOVO FORMATO: Agrupa respostas por seção
+            const resultado = this.formatarOutputAgrupado(respostas);
+            
             this.resultContent.innerText = resultado;
             this.resultBox.style.display = 'block';
             this.btnCopiar.style.display = 'block';
@@ -550,6 +551,37 @@ class DadosExtrator {
         } finally {
             this.mostrarLoading(false);
         }
+    }
+
+    // Novo método: Formata output agrupado por seção
+    formatarOutputAgrupado(respostas) {
+        // respostas[0] = Q1, respostas[1] = Q2, ..., respostas[8] = Q9
+        
+        const secoes = [];
+        
+        // Seção 1: Jurisdição/Atribuição (Q1 e Q9)
+        const jurisdicao = [respostas[0], respostas[8]].filter(r => r).join(', ');
+        if (jurisdicao) {
+            secoes.push(`Jurisdição/Atribuição: ${jurisdicao}`);
+        }
+        
+        // Seção 2: Responsável pela comunicação com o disque 100 (Q7)
+        if (respostas[6]) {
+            secoes.push(`Responsável pela comunicação com o disque 100: ${respostas[6]}`);
+        }
+        
+        // Seção 3: Informações adicionais (Q3)
+        if (respostas[2]) {
+            secoes.push(`Informações adicionais: ${respostas[2]}`);
+        }
+        
+        // Seção 4: Telefones disponíveis (Q4 e Q5)
+        const telefones = [respostas[3], respostas[4]].filter(r => r).join(', ');
+        if (telefones) {
+            secoes.push(`Telefones disponíveis: ${telefones}`);
+        }
+        
+        return secoes.join('\n');
     }
 
     limpar() {

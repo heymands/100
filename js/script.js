@@ -580,13 +580,11 @@ class DadosExtrator {
         // 4. Corrige gramática e ortografia comum
         resposta = this.corrigirGramatica(resposta);
         
-        // 5. Expande números ordinais (1ª → Primeira, 20ª → Vigésima)
-        resposta = this.expandirNumericosOrdinais(resposta);
-        
-        // 6. Expande abreviações de órgãos (DP → Delegacia de Polícia)
+        // 5. Expande abreviações de órgãos (DP → Delegacia de Polícia)
+        // NOTA: Ordinais (1ª, 2ª, 20ª) deixados no padrão, sem expansão
         resposta = this.expandirAbreviacoes(resposta);
         
-        // 7. Específico por pergunta
+        // 6. Específico por pergunta
         if (numero === 3) {
             resposta = this.padronizarHorarios(resposta);
         }
@@ -599,10 +597,10 @@ class DadosExtrator {
             resposta = this.corrigirEstados(resposta);
         }
         
-        // 8. Corrige crase (apenas formatação)
+        // 7. Corrige crase (apenas formatação)
         resposta = this.corrigirCrase(resposta);
         
-        // 9. Capitalização corporativa (ÚLTIMO PASSO - não altera palavras, apenas maiúscula)
+        // 8. Capitalização corporativa (ÚLTIMO PASSO - não altera palavras, apenas maiúscula)
         resposta = this.capitalizarCorporativo(resposta);
         
         return resposta;

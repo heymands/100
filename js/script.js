@@ -90,10 +90,35 @@ class DadosExtrator {
         return texto.replace(/\s+/g, ' ').trim();
     }
 
-    // Remove letras duplicadas consecutivas (como "paaulo" → "paulo", "saaúde" → "saúde")
+    // Remove letras duplicadas consecutivas (como "paaulo" → "paulo", "saaúde" → "saúde", "saaão" → "são")
     removerDuplicatasLetras(texto) {
-        // Remove repetições de letras consecutivas (mais de 1 repetição = 2+ da mesma letra)
-        return texto.replace(/([a-záéíóúãõâêô])\1+/gi, '$1');
+        // Remove duplicatas de cada vogal
+        return texto
+            .replace(/a{2,}/g, 'a')         // aa+ → a
+            .replace(/aã/g, 'ã')           // aã → ã
+            .replace(/aá/g, 'á')           // aá → á
+            .replace(/aâ/g, 'â')           // aâ → â
+            .replace(/e{2,}/g, 'e')         // ee+ → e
+            .replace(/eé/g, 'é')           // eé → é
+            .replace(/eê/g, 'ê')           // eê → ê
+            .replace(/i{2,}/g, 'i')         // ii+ → i
+            .replace(/í{2,}/g, 'í')         // íí+ → í
+            .replace(/o{2,}/g, 'o')         // oo+ → o
+            .replace(/oó/g, 'ó')           // oó → ó
+            .replace(/oõ/g, 'õ')           // oõ → õ
+            .replace(/oô/g, 'ô')           // oô → ô
+            .replace(/u{2,}/g, 'u')         // uu+ → u
+            .replace(/uú/g, 'ú')           // uú → ú
+            .replace(/ã{2,}/g, 'ã')        // ãã+ → ã
+            .replace(/õ{2,}/g, 'õ')        // õõ+ → õ
+            .replace(/á{2,}/g, 'á')        // áá+ → á
+            .replace(/é{2,}/g, 'é')        // éé+ → é
+            .replace(/í{2,}/g, 'í')        // íí+ → í
+            .replace(/ó{2,}/g, 'ó')        // óó+ → ó
+            .replace(/ú{2,}/g, 'ú')        // úú+ → ú
+            .replace(/â{2,}/g, 'â')        // ââ+ → â
+            .replace(/ê{2,}/g, 'ê')        // êê+ → ê
+            .replace(/ô{2,}/g, 'ô');       // ôô+ → ô
     }
 
     // Expande abreviações de órgãos públicos
@@ -190,10 +215,11 @@ class DadosExtrator {
 
     // Formata telefones: (DD) 9XXXX-XXXX ou (DD) XXXXX-XXXX
     detectarTelefones(texto) {
-        // Remove "tel" ou "telefone" se existir
-        texto = texto.replace(/\b(tel|telefone|phone)\s*[\:\-]?\s*/gi, '');
+        // Remove "telefone" / "tel" / "phone" como palavra isolada (evita remover do meio de palavras)
+        texto = texto.replace(/^\s*(telefone|tel|phone)\s*[\:\-]?\s*/gi, '');
+        texto = texto.replace(/\s+(telefone|tel|phone)\s*[\:\-]?\s*/gi, ' ');
         
-        // Remove +55 se existir no início
+        // Remove +55 se existir
         texto = texto.replace(/\+55\s*/, '');
         
         // Limpa caracteres especiais que não sejam dígitos, parênteses e hífens

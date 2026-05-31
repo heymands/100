@@ -201,9 +201,10 @@ class DadosExtrator {
         // Remove: # * / @ $ & etc
         let result = texto;
         
-        // Padrão: (XX) 9XXXX-XXXX ou (XX) XXXXX-XXXX
+        // Padrão: (XX) 9XXXX-XXXX ou (XX) XXXXX-XXXX ou (XX) 9 XXXX XXXX
         // Extrai DDD + 8 ou 9 dígitos
-        result = result.replace(/\(?(\d{2})\)?[\s\.\-]*9?(\d{4})[\s\.\-]?(\d{4})/g, (match, ddd, parte1, parte2) => {
+        // Versão 1: Com 9 opcional direto
+        result = result.replace(/\(?(\d{2})\)?[\s\.\-]*9?[\s]?(\d{4})[\s\.\-]?(\d{4})/g, (match, ddd, parte1, parte2) => {
             // Valida se tem 8 ou 9 dígitos no total
             if ((parte1 + parte2).length === 8 || (parte1 + parte2).length === 9) {
                 return `(${ddd}) ${parte1}-${parte2}`;

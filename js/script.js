@@ -201,12 +201,17 @@ class DadosExtrator {
         // Remove: # * / @ $ & etc
         let result = texto;
         
-        // Padrão: (XX) 9XXXX-XXXX ou (XX) XXXXX-XXXX ou (XX) 9 XXXX XXXX
-        // Extrai DDD + 8 ou 9 dígitos
-        // Versão 1: Com 9 opcional direto
-        result = result.replace(/\(?(\d{2})\)?[\s\.\-]*9?[\s]?(\d{4})[\s\.\-]?(\d{4})/g, (match, ddd, parte1, parte2) => {
-            // Valida se tem 8 ou 9 dígitos no total
-            if ((parte1 + parte2).length === 8 || (parte1 + parte2).length === 9) {
+        // Padrão 1: Com 9 explícito (XX) 9 XXXX XXXX ou (XX)9XXXX-XXXX
+        result = result.replace(/\(?(\d{2})\)?[\s\.\-]*9[\s\.\-]?(\d{4})[\s\.\-]?(\d{4})/g, (match, ddd, parte1, parte2) => {
+            if ((parte1 + parte2).length === 8) {
+                return `(${ddd}) ${parte1}-${parte2}`;
+            }
+            return match;
+        });
+        
+        // Padrão 2: Sem 9 (XX) XXXX-XXXX
+        result = result.replace(/\(?(\d{2})\)?[\s\.\-]?(\d{4})[\s\.\-]?(\d{4})(?![0-9])/g, (match, ddd, parte1, parte2) => {
+            if ((parte1 + parte2).length === 8) {
                 return `(${ddd}) ${parte1}-${parte2}`;
             }
             return match;
@@ -597,14 +602,12 @@ class DadosExtrator {
         if (numero === 3) {
             resposta = this.padronizarHorarios(resposta);
         }
-        
-        if (numero === 4 || numero === 5) {
-            resposta = this.detectarTelefones(resposta);
-        }
-        
-        if (numero === 8) {
-            resposta = this.corrigirEstados(resposta);
-        }
+         
+        // Detecta e formata telefones em TODAS as respostas
+        resposta = this.detectarTelefones(resposta);
+         
+        // Corrige estados em TODAS as respostas
+        resposta = this.corrigirEstados(resposta);
         
         // 7. Corrige crase (apenas formatação)
         resposta = this.corrigirCrase(resposta);

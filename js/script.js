@@ -90,6 +90,98 @@ class DadosExtrator {
         return texto.replace(/\s+/g, ' ').trim();
     }
 
+    // Expande abreviações de órgãos públicos
+    expandirAbreviacoes(texto) {
+        const abreviacoes = {
+            // Polícia
+            '\\bDP\\b': 'Delegacia de Polícia',
+            '\\bPC\\b': 'Polícia Civil',
+            '\\bPM\\b': 'Polícia Militar',
+            '\\bPRF\\b': 'Polícia Rodoviária Federal',
+            '\\bPE\\b': 'Polícia Estadual',
+            
+            // Ministério e Órgãos
+            '\\bMP\\b': 'Ministério Público',
+            '\\bMPF\\b': 'Ministério Público Federal',
+            '\\bMPE\\b': 'Ministério Público Estadual',
+            
+            // Patrimônio e Ambiente
+            '\\bIPHAN\\b': 'Instituto do Patrimônio Histórico e Artístico Nacional',
+            '\\bIBAMA\\b': 'Instituto Brasileiro do Meio Ambiente',
+            '\\bICMBio\\b': 'Instituto Chico Mendes de Conservação da Biodiversidade',
+            
+            // Justiça e Direito
+            '\\bOAB\\b': 'Ordem dos Advogados do Brasil',
+            '\\bSTF\\b': 'Supremo Tribunal Federal',
+            '\\bSTJ\\b': 'Superior Tribunal de Justiça',
+            
+            // Internacional
+            '\\bONU\\b': 'Organização das Nações Unidas',
+            '\\bCNDH\\b': 'Conselho Nacional de Direitos Humanos',
+            
+            // Corrige "disque 100" para "Disque 100"
+            '\\bdisque\\s*100\\b': 'Disque 100',
+            '\\bDisque\\s*100\\b': 'Disque 100',
+        };
+        
+        let result = texto;
+        for (const [padrao, expansao] of Object.entries(abreviacoes)) {
+            result = result.replace(new RegExp(padrao, 'gi'), expansao);
+        }
+        
+        return result;
+    }
+
+    // Expande números ordinais (1ª → Primeira, 20ª → Vigésima, etc)
+    expandirNumericosOrdinais(texto) {
+        const ordinais = {
+            '1ª': 'Primeira', '2ª': 'Segunda', '3ª': 'Terceira', '4ª': 'Quarta', '5ª': 'Quinta',
+            '6ª': 'Sexta', '7ª': 'Sétima', '8ª': 'Oitava', '9ª': 'Nona', '10ª': 'Décima',
+            '11ª': 'Décima Primeira', '12ª': 'Décima Segunda', '13ª': 'Décima Terceira', 
+            '14ª': 'Décima Quarta', '15ª': 'Décima Quinta', '16ª': 'Décima Sexta', 
+            '17ª': 'Décima Sétima', '18ª': 'Décima Oitava', '19ª': 'Décima Nona', 
+            '20ª': 'Vigésima', '21ª': 'Vigésima Primeira', '22ª': 'Vigésima Segunda', 
+            '30ª': 'Trigésima', '40ª': 'Quadragésima', '50ª': 'Quinquagésima'
+        };
+        
+        let result = texto;
+        for (const [ordinal, nome] of Object.entries(ordinais)) {
+            result = result.replace(new RegExp('\\b' + ordinal.replace(/[ª]/g, '[ªª]?'), 'gi'), nome);
+        }
+        
+        return result;
+    }
+
+    // Corrige erros ortográficos comuns em contexto governamental
+    corrigirGramatica(texto) {
+        const correcoes = {
+            'delegácia': 'delegacia',
+            'atendere': 'atender',
+            'comunicacão': 'comunicação',
+            'jurisdição': 'jurisdição',
+            'proteçao': 'proteção',
+            'necessáro': 'necessário',
+            'responsavel': 'responsável',
+            'informacoes': 'informações',
+            'situacoes': 'situações',
+            'funcoes': 'funções',
+            'acoes': 'ações',
+            'defesa': 'defesa',
+            'previdencia': 'previdência',
+            'assistencia': 'assistência',
+            'referencia': 'referência',
+            'horario': 'horário',
+            'endereço': 'endereço',
+        };
+        
+        let result = texto;
+        for (const [errado, correto] of Object.entries(correcoes)) {
+            result = result.replace(new RegExp('\\b' + errado + '\\b', 'gi'), correto);
+        }
+        
+        return result;
+    }
+
     // Formata telefones: (DD) 9XXXX-XXXX ou (DD) XXXXX-XXXX
     detectarTelefones(texto) {
         // Remove "tel" ou "telefone" se existir
@@ -485,7 +577,16 @@ class DadosExtrator {
         // 3. Corrige cidades brasileiras
         resposta = this.corrigirCidades(resposta);
         
-        // 4. Específico por pergunta
+        // 4. Corrige gramática e ortografia comum
+        resposta = this.corrigirGramatica(resposta);
+        
+        // 5. Expande números ordinais (1ª → Primeira, 20ª → Vigésima)
+        resposta = this.expandirNumericosOrdinais(resposta);
+        
+        // 6. Expande abreviações de órgãos (DP → Delegacia de Polícia)
+        resposta = this.expandirAbreviacoes(resposta);
+        
+        // 7. Específico por pergunta
         if (numero === 3) {
             resposta = this.padronizarHorarios(resposta);
         }
@@ -498,10 +599,10 @@ class DadosExtrator {
             resposta = this.corrigirEstados(resposta);
         }
         
-        // 5. Corrige crase (apenas formatação)
+        // 8. Corrige crase (apenas formatação)
         resposta = this.corrigirCrase(resposta);
         
-        // 6. Capitalização corporativa (ÚLTIMO PASSO - não altera palavras, apenas maiúscula)
+        // 9. Capitalização corporativa (ÚLTIMO PASSO - não altera palavras, apenas maiúscula)
         resposta = this.capitalizarCorporativo(resposta);
         
         return resposta;

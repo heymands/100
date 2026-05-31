@@ -443,6 +443,7 @@ class DadosExtrator {
             'nao': 'não',
             'cao': 'cão',
             'sao': 'são',
+            'sao paulo': 'São Paulo',
             'mae': 'mãe',
             'pao': 'pão',
             'vao': 'vão',
@@ -571,11 +572,11 @@ class DadosExtrator {
         // 1. Normaliza espaços
         resposta = this.normalizar(resposta);
         
-        // 2. Corrige acentuação local (SEM API)
-        resposta = this.corrigirAcentuacaoLocal(resposta);
-        
-        // 3. Corrige cidades brasileiras
+        // 2. Corrige cidades brasileiras PRIMEIRO
         resposta = this.corrigirCidades(resposta);
+        
+        // 3. Corrige acentuação local (SEM API)
+        resposta = this.corrigirAcentuacaoLocal(resposta);
         
         // 4. Corrige gramática e ortografia comum
         resposta = this.corrigirGramatica(resposta);

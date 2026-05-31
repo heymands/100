@@ -553,7 +553,7 @@ class DadosExtrator {
         }
     }
 
-    // Novo método: Formata output agrupado por seção
+    // Novo método: Formata output agrupado por seção (SEM QUEBRA DE LINHA)
     formatarOutputAgrupado(respostas) {
         // respostas[0] = Q1, respostas[1] = Q2, ..., respostas[8] = Q9
         
@@ -581,7 +581,8 @@ class DadosExtrator {
             secoes.push(`Telefones disponíveis: ${telefones}`);
         }
         
-        return secoes.join('\n');
+        // Retorna com . como separador (SEM QUEBRA DE LINHA)
+        return secoes.join('. ') + '.';
     }
 
     limpar() {

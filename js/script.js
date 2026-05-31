@@ -442,8 +442,6 @@ class DadosExtrator {
             // Comum "a" → "ã"
             'nao': 'não',
             'cao': 'cão',
-            'sao': 'são',
-            'sao paulo': 'São Paulo',
             'mae': 'mãe',
             'pao': 'pão',
             'vao': 'vão',

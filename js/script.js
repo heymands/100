@@ -655,13 +655,12 @@ class DadosExtrator {
     // Novo método: Formata output agrupado por seção (SEM QUEBRA DE LINHA)
     formatarOutputAgrupado(respostas) {
         // respostas[0] = Q1, respostas[1] = Q2, ..., respostas[8] = Q9
-        
+         
         const secoes = [];
-        
-        // Seção 1: Jurisdição/Atribuição (Q1 e Q9)
-        const jurisdicao = [respostas[0], respostas[8]].filter(r => r).join(', ');
-        if (jurisdicao) {
-            secoes.push(`Jurisdição/Atribuição: ${jurisdicao}`);
+         
+        // Seção 1: Jurisdição/Atribuição (apenas Q9)
+        if (respostas[8]) {
+            secoes.push(`Jurisdição/Atribuição: ${respostas[8]}`);
         }
         
         // Seção 2: Responsável pela comunicação com o Disque 100 (Q7)

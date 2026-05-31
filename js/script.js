@@ -293,8 +293,8 @@ class DadosExtrator {
     corrigirCrase(texto) {
         // Crase SÓ ocorre: preposição "a" + artigo definido feminino "a"/"as"
         
-        // Evita: emails, URLs, números
-        if (texto.includes('@') || texto.includes('://') || /\d/.test(texto)) {
+        // Evita: emails, URLs
+        if (texto.includes('@') || texto.includes('://')) {
             return texto;
         }
         

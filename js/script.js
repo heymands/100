@@ -305,11 +305,12 @@ class DadosExtrator {
             return match.toLowerCase() === 'a as' ? 'às' : 'Às';
         });
         
-        // "a a" → "à" (preposição + artigo singular feminino)
-        // MAS não em casos como "segunda a sexta" (sem artigo)
+        // Dias da semana: "segunda a sexta", "segunda a quinta", etc.
+        result = result.replace(/\b(segunda|terça|quarta|quinta|sexta)\s+a\s+(sexta|quinta|quarta|terça|segunda)/gi, '$1 à $2');
+        
+        // "a a" → "à" (preposição + artigo singular feminino GENÉRICO)
         result = result.replace(/\ba\s+a\s+([aeiou])/gi, (match, letra) => {
-            // Verifica se é seguido de vogal (sinal de artigo + substantivo)
-            return match.toLowerCase().startsWith('a a a') ? 'à a ' + letra : match;
+            return 'à a ' + letra;
         });
         
         // "para a" → "para à" (preposição + artigo)

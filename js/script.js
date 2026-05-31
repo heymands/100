@@ -92,8 +92,8 @@ class DadosExtrator {
 
     // Remove letras duplicadas consecutivas (como "paaulo" → "paulo", "saaúde" → "saúde")
     removerDuplicatasLetras(texto) {
-        // Remove repetições de letras consecutivas (mais de 2 da mesma letra)
-        return texto.replace(/([a-záéíóúãõâêô])\1{2,}/gi, '$1');
+        // Remove repetições de letras consecutivas (mais de 1 repetição = 2+ da mesma letra)
+        return texto.replace(/([a-záéíóúãõâêô])\1+/gi, '$1');
     }
 
     // Expande abreviações de órgãos públicos

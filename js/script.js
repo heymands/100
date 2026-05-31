@@ -629,6 +629,10 @@ class DadosExtrator {
             for (let num = 1; num <= 9; num++) {
                 if (dados[num]) {
                     const processada = this.processarResposta(num, dados[num]);
+                    // DEBUG: Log para São Paulo
+                    if (processada.includes('paulo')) {
+                        console.log(`Q${num} resultado:`, processada);
+                    }
                     respostas.push(processada);
                 } else {
                     respostas.push('');
